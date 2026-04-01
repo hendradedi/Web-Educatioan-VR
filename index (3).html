@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARUNA — Inovasi Aplikasi Edukasi Seksual Anak Usia Dini Berbasis Augmented Reality</title>
+  <meta name="description" content="ARUNA: Inovasi Aplikasi Edukasi Seksual Anak Usia Dini Berbasis Augmented Reality sebagai Solusi Preventif Kekerasan Seksual di Era Digital. P2MW UNNES 2026." />
+  <meta name="theme-color" content="#0EA5E9" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui'] },
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+  <!-- Babel (JSX transpiler in browser) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    #root { min-height: 100vh; }
+
+    @keyframes bounce-in {
+      0%   { opacity: 0; transform: translateX(60px); }
+      60%  { transform: translateX(-6px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    .animate-bounce-in { animation: bounce-in 0.35s ease-out; }
+
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 0.7; }
+    }
+    .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+// ─── LUCIDE ICON HELPER ──────────────────────────────────────────
+// Wraps lucide UMD icons as React components
+function Icon({ name, className = "w-5 h-5" }) {
+  const el = React.useRef(null);
+  React.useEffect(() => {
+    if (el.current && window.lucide) {
+      el.current.innerHTML = "";
+      const svg = window.lucide.createElement(name);
+      if (svg) {
+        const cls = className.split(" ");
+        cls.forEach(c => c && svg.classList.add(c));
+        el.current.appendChild(svg);
+      }
+    }
+  }, [name, className]);
+  return React.createElement("span", { ref: el, className: "inline-flex items-center justify-center" });
+}
+
+// Shorthand icon components matching lucide names
+const Ic = (name) => ({ className }) => React.createElement(Icon, { name, className });
+const MenuIcon       = Ic("menu");
+const XIcon          = Ic("x");
+const GlassesIcon    = Ic("glasses");
+const ShieldCheckIcon= Ic("shield-check");
+const BookOpenIcon   = Ic("book-open");
+const StarIcon       = Ic("star");
+const UsersIcon      = Ic("users");
+const LayoutDashIcon = Ic("layout-dashboard");
+const LogOutIcon     = Ic("log-out");
+const ActivityIcon   = Ic("activity");
+const BarChart3Icon  = Ic("bar-chart-3");
+const ChevRightIcon  = Ic("chevron-right");
+const SmileIcon      = Ic("smile");
+const HeartIcon      = Ic("heart");
+const PlayCircleIcon = Ic("play-circle");
+const LockIcon       = Ic("lock");
+const UserPlusIcon   = Ic("user-plus");
+const CreditCardIcon = Ic("credit-card");
+const CheckCircIcon  = Ic("check-circle");
+const WalletIcon     = Ic("wallet");
+const ArrowRightIcon = Ic("arrow-right");
+const ReceiptIcon    = Ic("receipt");
+const ShieldIcon     = Ic("shield");
+const FileTextIcon   = Ic("file-text");
+const VideoIcon      = Ic("video");
+const AwardIcon      = Ic("award");
+const CheckIcon      = Ic("check");
+const MaximizeIcon   = Ic("maximize");
+const BellIcon       = Ic("bell");
+const SearchIcon     = Ic("search");
+const DownloadIcon   = Ic("download");
+const TrendUpIcon    = Ic("trending-up");
+const ClockIcon      = Ic("clock");
+const ChevDownIcon   = Ic("chevron-down");
+const ChevUpIcon     = Ic("chevron-up");
+const FilterIcon     = Ic("filter");
+const RefreshIcon    = Ic("refresh-cw");
+const MessageIcon    = Ic("message-square");
+const HelpCircIcon   = Ic("help-circle");
+const ZapIcon        = Ic("zap");
+const GlobeIcon      = Ic("globe");
+const PhoneIcon      = Ic("phone");
+const MailIcon       = Ic("mail");
+const AlertCircIcon  = Ic("alert-circle");
+const InfoIcon       = Ic("info");
+const XCircIcon      = Ic("x-circle");
+const CheckCirc2Icon = Ic("check-circle-2");
+const SparklesIcon   = Ic("sparkles");
+const BookMarkIcon   = Ic("bookmark");
+const TargetIcon     = Ic("target");
+const BarChart2Icon  = Ic("bar-chart-2");
+const UserCheckIcon  = Ic("user-check");
+const SettingsIcon   = Ic("settings");
+const ThumbsUpIcon   = Ic("thumbs-up");
+const BookMarkedIcon = Ic("book-marked");
+
+// ─── TOAST ────────────────────────────────────────────────────────
+function Toast({ toasts, removeToast }) {
+  return (
+    <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-2 pointer-events-none" style={{maxWidth:320}}>
+      {toasts.map(t => (
+        <div key={t.id} className={`flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl text-white text-sm font-semibold animate-bounce-in pointer-events-auto
+          ${t.type==='success'?'bg-emerald-500':t.type==='error'?'bg-rose-500':t.type==='warning'?'bg-amber-500':'bg-sky-500'}`}>
+          {t.type==='success'?<CheckCirc2Icon className="w-5 h-5 shrink-0"/>:
+           t.type==='error'  ?<XCircIcon className="w-5 h-5 shrink-0"/>:
+           t.type==='warning'?<AlertCircIcon className="w-5 h-5 shrink-0"/>:
+                              <InfoIcon className="w-5 h-5 shrink-0"/>}
+          <span className="flex-1">{t.message}</span>
+          <button onClick={()=>removeToast(t.id)} className="opacity-70 hover:opacity-100 ml-2"><XIcon className="w-4 h-4"/></button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── PROGRESS BAR ─────────────────────────────────────────────────
+function ProgressBar({ value, max=100, color="sky", size="md" }) {
+  const pct = Math.min(100, Math.round((value/max)*100));
+  const colors = { sky:"bg-sky-500", rose:"bg-rose-500", emerald:"bg-emerald-500", amber:"bg-amber-500", violet:"bg-violet-500", slate:"bg-slate-300" };
+  const heights = { sm:"h-1.5", md:"h-2.5", lg:"h-3.5" };
+  return (
+    <div className={`w-full bg-slate-100 rounded-full ${heights[size]} overflow-hidden`}>
+      <div className={`${colors[color]||'bg-slate-300'} ${heights[size]} rounded-full transition-all duration-700`} style={{width:`${pct}%`}}/>
+    </div>
+  );
+}
+
+// ─── STAT CARD ────────────────────────────────────────────────────
+function StatCard({ icon: Ic2, label, value, sub, color="sky", trend }) {
+  const cls = {
+    sky:"bg-sky-50 text-sky-600 border-sky-100",
+    rose:"bg-rose-50 text-rose-600 border-rose-100",
+    emerald:"bg-emerald-50 text-emerald-600 border-emerald-100",
+    amber:"bg-amber-50 text-amber-600 border-amber-100",
+    violet:"bg-violet-50 text-violet-600 border-violet-100",
+  };
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+      <div className="flex items-center justify-between mb-3">
+        <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${cls[color]}`}>
+          <Ic2 className="w-5 h-5"/>
+        </div>
+        {trend!=null&&(
+          <span className={`text-xs font-bold px-2 py-1 rounded-full ${trend>=0?'bg-emerald-50 text-emerald-600':'bg-rose-50 text-rose-600'}`}>
+            {trend>=0?'↑':'↓'} {Math.abs(trend)}%
+          </span>
+        )}
+      </div>
+      <div className="text-2xl font-extrabold text-slate-900">{value}</div>
+      <div className="text-sm font-semibold text-slate-500 mt-0.5">{label}</div>
+      {sub&&<div className="text-xs text-slate-400 mt-1">{sub}</div>}
+    </div>
+  );
+}
+
+// ─── BADGE ────────────────────────────────────────────────────────
+function Badge({ children, color="sky" }) {
+  const cls = {
+    sky:"bg-sky-100 text-sky-700", rose:"bg-rose-100 text-rose-700",
+    emerald:"bg-emerald-100 text-emerald-700", amber:"bg-amber-100 text-amber-700",
+    violet:"bg-violet-100 text-violet-700", slate:"bg-slate-100 text-slate-600",
+  };
+  return <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold ${cls[color]||cls.slate}`}>{children}</span>;
+}
+
+// ─── MODULE CARD ──────────────────────────────────────────────────
+function ModuleCard({ mod, isPremium, onStart, onUpgrade }) {
+  const locked = mod.premium && !isPremium;
+  const IcMod = mod.icon;
+  return (
+    <div className={`relative bg-white border rounded-2xl p-6 flex flex-col transition-all duration-200
+      ${locked?'border-slate-200 opacity-80':'border-slate-200 hover:border-sky-300 hover:shadow-lg hover:-translate-y-0.5'}
+      ${mod.borderColor||''}`}>
+      {locked&&(
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-2xl">
+          <div className="w-14 h-14 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-center mb-3">
+            <LockIcon className="w-7 h-7 text-slate-400"/>
+          </div>
+          <p className="font-bold text-slate-700 text-sm mb-1">Eksklusif Premium</p>
+          <button onClick={onUpgrade} className="text-xs font-semibold text-sky-600 hover:underline">Buka Akses Modul →</button>
+        </div>
+      )}
+      <div className="flex justify-between items-start mb-4">
+        <div className={`w-12 h-12 ${mod.iconBg} rounded-xl flex items-center justify-center ${mod.iconColor}`}>
+          <IcMod className="w-6 h-6"/>
+        </div>
+        <div className="flex gap-2">
+          {mod.premium?<Badge color="violet">Premium</Badge>:<Badge color="emerald">Gratis</Badge>}
+          {mod.isNew&&<Badge color="rose">Baru</Badge>}
+        </div>
+      </div>
+      <h4 className="font-bold text-slate-800 text-base mb-2 leading-tight">{mod.title}</h4>
+      <p className="text-sm text-slate-500 mb-4 flex-1 leading-relaxed">{mod.desc}</p>
+      <div className="mb-3">
+        <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+          <span>Progress</span><span className="font-bold text-slate-700">{mod.progress}%</span>
+        </div>
+        <ProgressBar value={mod.progress} color={mod.progressColor||"sky"}/>
+      </div>
+      <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
+        <span className="flex items-center gap-1"><ClockIcon className="w-3 h-3"/> {mod.duration}</span>
+        <span className="flex items-center gap-1"><UsersIcon className="w-3 h-3"/> {mod.ageGroup}</span>
+        <span className="flex items-center gap-1">⭐ {mod.rating}</span>
+      </div>
+      <button onClick={locked?onUpgrade:onStart} disabled={locked}
+        className={`w-full font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition text-sm
+          ${locked?'border border-slate-200 text-slate-400 cursor-not-allowed':'bg-sky-500 text-white hover:bg-sky-600 shadow-sm hover:shadow'}`}>
+        <MaximizeIcon className="w-4 h-4"/>
+        {locked?'Terkunci':mod.progress>0?'Lanjutkan Simulasi':'Mulai Simulasi AR'}
+      </button>
+    </div>
+  );
+}
+
+// ─── CHILD CARD ───────────────────────────────────────────────────
+function ChildCard({ child, onToast }) {
+  return (
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-md transition-all">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold text-lg shadow">
+          {child.name.charAt(0)}
+        </div>
+        <div className="flex-1">
+          <p className="font-bold text-slate-800">{child.name}</p>
+          <p className="text-xs text-slate-500">{child.age} tahun · {child.school}</p>
+        </div>
+        <Badge color={child.active?"emerald":"slate"}>{child.active?"Aktif":"Tidak Aktif"}</Badge>
+      </div>
+      <div className="grid grid-cols-3 gap-3 mb-4 text-center">
+        {[
+          {label:"Modul Selesai",value:child.modulesCompleted,color:"text-sky-600"},
+          {label:"Total Sesi",value:child.totalSessions,color:"text-emerald-600"},
+          {label:"Skor Rata-rata",value:child.avgScore+"%",color:"text-amber-600"},
+        ].map(s=>(
+          <div key={s.label} className="bg-slate-50 rounded-xl p-2">
+            <div className={`text-lg font-extrabold ${s.color}`}>{s.value}</div>
+            <div className="text-[10px] text-slate-500 font-medium">{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="mb-3">
+        <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+          <span>Progress Keseluruhan</span><span className="font-bold">{child.overallProgress}%</span>
+        </div>
+        <ProgressBar value={child.overallProgress} color="sky"/>
+      </div>
+      <div className="flex gap-2 mt-3">
+        <button onClick={()=>onToast("Fitur laporan detail segera hadir!","info")} className="flex-1 text-xs font-semibold text-sky-600 border border-sky-200 py-2 rounded-xl hover:bg-sky-50 transition flex items-center justify-center gap-1">
+          <BarChart2Icon className="w-3 h-3"/> Laporan
+        </button>
+        <button onClick={()=>onToast("Fitur kelola profil segera hadir!","info")} className="flex-1 text-xs font-semibold text-slate-600 border border-slate-200 py-2 rounded-xl hover:bg-slate-50 transition flex items-center justify-center gap-1">
+          <SettingsIcon className="w-3 h-3"/> Kelola
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════════
+function App() {
+  const [view, setView]             = React.useState("landing");
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [user, setUser]             = React.useState(null);
+  const [selPkg, setSelPkg]         = React.useState(null);
+  const [toasts, setToasts]         = React.useState([]);
+  const [notifs]                    = React.useState(3);
+  const [vrSession, setVrSession]   = React.useState(false);
+  const [vrMod, setVrMod]           = React.useState(null);
+  const [adminTab, setAdminTab]     = React.useState("overview");
+  const [dashTab, setDashTab]       = React.useState("home");
+  const [search, setSearch]         = React.useState("");
+  const [pmtMethod, setPmtMethod]   = React.useState("transfer");
+  const [faqOpen, setFaqOpen]       = React.useState(null);
+  const [savedIds, setSavedIds]     = React.useState([]);
+
+  const addToast = (message, type="info") => {
+    const id = Date.now();
+    setToasts(p=>[...p,{id,message,type}]);
+    setTimeout(()=>setToasts(p=>p.filter(t=>t.id!==id)),3500);
+  };
+  const removeToast = id => setToasts(p=>p.filter(t=>t.id!==id));
+
+  const go = (v) => { setView(v); window.scrollTo(0,0); setMobileOpen(false); };
+
+  const handleLogin = (e, role="parent") => {
+    e.preventDefault();
+    if (role==="admin") { setUser({name:"Admin Pusat",role:"admin",plan:"premium"}); go("admin"); }
+    else                { setUser({name:"Bunda Anita",role:"parent",plan:"free"}); go("dashboard"); }
+    addToast("Selamat datang kembali! 👋","success");
+  };
+  const handleRegister = e => {
+    e.preventDefault();
+    setUser({name:"Pengguna Baru",role:"parent",plan:"free"});
+    go("dashboard");
+    addToast("Akun berhasil dibuat! Selamat datang di ARUNA 🎉","success");
+  };
+  const processPayment = () => {
+    setTimeout(()=>{ setUser({...user,plan:selPkg.type}); addToast(`Paket ${selPkg.type} aktif! ✨`,"success"); go("dashboard"); },1000);
+  };
+  const isPremium = user?.plan==="premium"||user?.plan==="Keluarga"||user?.plan==="Sekolah";
+
+  // DATA
+  const VR_MODULES = [
+    {id:1,title:"Modul 1: Mengenal Anggota Tubuh",desc:"Pengenalan dasar batasan area privasi melalui karakter AR yang muncul di dunia nyata anak.",icon:SmileIcon,iconBg:"bg-sky-100",iconColor:"text-sky-600",premium:false,progress:65,duration:"15 mnt",ageGroup:"4–6 thn",rating:4.9,progressColor:"sky",borderColor:"border-l-4 border-l-sky-500"},
+    {id:2,title:"Modul 2: Sentuhan Boleh & Tidak Boleh",desc:"Skenario AR interaktif tentang cara mengenali dan menolak sentuhan yang tidak pantas.",icon:ShieldCheckIcon,iconBg:"bg-rose-100",iconColor:"text-rose-600",premium:true,progress:0,duration:"20 mnt",ageGroup:"4–6 thn",rating:4.8,progressColor:"rose",isNew:true},
+    {id:3,title:"Modul 3: Berteriak & Lari",desc:"Melatih respons darurat anak melalui simulasi AR cara berteriak minta tolong dan berlari ke tempat aman.",icon:ZapIcon,iconBg:"bg-amber-100",iconColor:"text-amber-600",premium:true,progress:0,duration:"18 mnt",ageGroup:"5–7 thn",rating:4.7,progressColor:"amber"},
+    {id:4,title:"Modul 4: Cerita kepada Orang Dewasa Dipercaya",desc:"Membangun kepercayaan anak untuk melaporkan kejadian tidak menyenangkan melalui simulasi AR.",icon:MessageIcon,iconBg:"bg-violet-100",iconColor:"text-violet-600",premium:true,progress:0,duration:"12 mnt",ageGroup:"4–8 thn",rating:4.9,progressColor:"violet",isNew:true},
+    {id:5,title:"Modul 5: Keamanan di Ruang Digital",desc:"Mengenali bahaya predator online melalui simulasi AR interaktif yang nyata dan aman.",icon:GlobeIcon,iconBg:"bg-emerald-100",iconColor:"text-emerald-600",premium:true,progress:0,duration:"22 mnt",ageGroup:"6–9 thn",rating:4.6,progressColor:"emerald"},
+    {id:6,title:"Modul 6: Peran Orang Dewasa Tepercaya",desc:"Membantu anak memahami siapa yang bisa dipercaya melalui karakter AR yang muncul di dunia nyata.",icon:HeartIcon,iconBg:"bg-rose-100",iconColor:"text-rose-600",premium:true,progress:0,duration:"16 mnt",ageGroup:"4–8 thn",rating:4.8,progressColor:"rose"},
+  ];
+
+  const PARENTING = [
+    {id:1,type:"Artikel Psikologi",icon:FileTextIcon,color:"sky",title:"Cara Menjawab Pertanyaan Sensitif Anak",author:"Dr. Risa Amalia, M.Psi",date:"Mar 2026",read:"5 mnt baca",likes:127},
+    {id:2,type:"Video Panduan",icon:VideoIcon,color:"rose",title:"Mengenalkan Batasan Tubuh pada Anak 3–5 Tahun",author:"Tim ARUNA AR EdTech",date:"Feb 2026",read:"12 mnt tonton",likes:89},
+    {id:3,type:"Modul Cetak",icon:BookMarkedIcon,color:"emerald",title:"Buku Aktivitas: Area Privasi Tubuhku",author:"Tim Kurikulum UNNES",date:"Jan 2026",read:"PDF gratis",likes:234},
+    {id:4,type:"Webinar Rekaman",icon:PlayCircleIcon,color:"amber",title:"Diskusi Pakar: Edukasi Seksual di Era Digital",author:"Prof. Dr. Siti Wahyuni",date:"Des 2025",read:"45 mnt rekaman",likes:156},
+    {id:5,type:"Panduan Orang Tua",icon:HeartIcon,color:"violet",title:"Panduan Komunikasi Efektif Orang Tua–Anak",author:"Tim Psikologi UNNES",date:"Jan 2026",read:"8 mnt baca",likes:203},
+    {id:6,type:"Infografis",icon:BarChart3Icon,color:"sky",title:"Statistik Kekerasan Seksual Anak di Indonesia 2025",author:"Komnas Perempuan",date:"Feb 2026",read:"3 mnt baca",likes:318},
+  ];
+
+  const CHILDREN = [
+    {id:1,name:"Arya Pratama",age:5,school:"TK Matahari",active:true,modulesCompleted:1,totalSessions:6,avgScore:88,overallProgress:40},
+    {id:2,name:"Nisa Rahmawati",age:4,school:"TK Matahari",active:true,modulesCompleted:0,totalSessions:2,avgScore:72,overallProgress:15},
+  ];
+
+  const FAQ = [
+    {q:"Apakah ARUNA aman untuk anak usia dini?",a:"Ya, seluruh konten ARUNA dirancang bersama psikolog klinis anak bersertifikat. Skenario AR menggunakan teknik storytelling positif dan permainan peran yang tidak menimbulkan trauma."},
+    {q:"Perangkat apa yang diperlukan untuk AR?",a:"ARUNA berjalan langsung melalui browser smartphone atau tablet tanpa instalasi aplikasi khusus. Cukup izinkan akses kamera, dan teknologi AR siap digunakan. Kompatibel dengan Android dan iOS."},
+    {q:"Bagaimana sistem laporan perkembangan anak bekerja?",a:"Sistem merekam setiap interaksi anak dalam sesi AR dan menganalisis responsnya. Laporan otomatis tersedia di dashboard, mencakup skor pemahaman, durasi belajar, dan rekomendasi modul berikutnya."},
+    {q:"Berapa anak yang bisa menggunakan satu akun?",a:"Paket Gratis: 1 profil. Paket Keluarga: hingga 3 profil anak. Paket Instansi: hingga 50 akun siswa dengan dashboard manajemen tersendiri untuk koordinator."},
+    {q:"Apakah ada garansi uang kembali?",a:"Ya, kami memberikan garansi uang kembali 7 hari tanpa syarat jika tidak puas. Hubungi tim support melalui email atau WhatsApp."},
+  ];
+
+  // ── AR SESSION ──────────────────────────────────────────────────
+  if (vrSession) return (
+    <div className="h-screen w-full bg-slate-900 flex flex-col overflow-hidden">
+      <header className="h-14 bg-slate-800 flex items-center justify-between px-4 border-b border-slate-700 shrink-0">
+        <div className="flex items-center gap-3 text-white">
+          <div className="bg-sky-500 p-1.5 rounded-lg"><GlassesIcon className="h-5 w-5"/></div>
+          <div>
+            <p className="font-bold text-sm">{vrMod?.title||"Modul AR"}</p>
+            <p className="text-xs text-slate-400">{vrMod?.duration} · {vrMod?.ageGroup}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-700 px-3 py-1.5 rounded-lg">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"/>Sesi Aktif
+          </div>
+          <button onClick={()=>{setVrSession(false);addToast("Sesi AR selesai. Laporan disimpan.","success");}}
+            className="flex items-center bg-rose-500/20 text-rose-400 hover:bg-rose-500 hover:text-white px-4 py-2 rounded-xl font-bold transition text-sm gap-2">
+            <XIcon className="h-4 w-4"/> Akhiri Sesi
+          </button>
+        </div>
+      </header>
+      <div className="flex-1 w-full bg-black relative">
+        <iframe src="https://framevr.io/edshild" className="absolute inset-0 w-full h-full border-0"
+          allow="camera; microphone; display-capture; xr-spatial-tracking" title="Demo AR ARUNA"/>
+      </div>
+    </div>
+  );
+
+  // ── LANDING ──────────────────────────────────────────────────────
+  const LandingPage = () => {
+    const features = [
+      {icon:ShieldCheckIcon,color:"sky",title:"Simulasi AR Aman & Terukur",desc:"Skenario AR menghadirkan karakter edukatif di dunia nyata anak, mengajarkan batasan tubuh tanpa menimbulkan trauma atau ketakutan."},
+      {icon:ActivityIcon,color:"rose",title:"Laporan Perkembangan Real-time",desc:"Pantau pemahaman anak melalui analitik dashboard lengkap yang mudah dibaca orang tua."},
+      {icon:BookOpenIcon,color:"amber",title:"Pusat Parenting Komprehensif",desc:"Akses artikel, webinar rekaman, dan tips eksklusif dari psikolog klinis berpengalaman."},
+      {icon:GlobeIcon,color:"emerald",title:"Akses Multi-Platform",desc:"Berjalan di browser biasa, tablet, dan smartphone. Teknologi AR langsung lewat kamera perangkat Anda."},
+      {icon:UserCheckIcon,color:"violet",title:"Profil Multi-Anak",desc:"Kelola profil belajar untuk beberapa anak sekaligus dengan laporan individual yang terpisah."},
+      {icon:AwardIcon,color:"amber",title:"Berbasis Riset Akademis",desc:"ARUNA dikembangkan dari riset UNNES 2026 dengan validasi pakar psikologi klinis — inovasi P2MW terpilih."},
+    ];
+    const testimonials = [
+      {name:"Ibu Dewi S.",role:"Orang Tua, Jakarta",text:"Anak saya jadi paham batasan tubuhnya tanpa perlu penjelasan panjang. Sangat membantu sekali!",avatar:"D"},
+      {name:"Kak Riana, M.Pd",role:"Guru TK Al-Ikhlas, Semarang",text:"Platform luar biasa. Mudah diintegrasikan ke kurikulum sekolah dan anak-anak sangat antusias.",avatar:"R"},
+      {name:"Bapak Hendra K.",role:"Dosen UNNES",text:"Inovasi yang tepat dan sangat dibutuhkan. Pendekatan AR membuat anak lebih mudah memahami dan lebih engaging.",avatar:"H"},
+    ];
+    const PKGS = [
+      {name:"Gratis",price:"Rp 0",period:"selamanya",desc:"Untuk mencoba layanan ARUNA",features:["1 Modul AR Demo","Profil 1 anak","Laporan dasar"],cta:"Daftar Gratis",type:"free"},
+      {name:"Keluarga",price:"Rp 50.000",period:"/bulan",desc:"Ideal untuk penggunaan di rumah",features:["Semua 6 Modul AR","Profil hingga 3 anak","Laporan analitik lengkap","Pusat Parenting Penuh"],cta:"Pilih Paket",popular:true,type:"Keluarga",harga:50000},
+      {name:"Instansi",price:"Rp 250.000",period:"/bulan",desc:"Untuk TK, PAUD & Organisasi",features:["Semua 6 Modul AR","Hingga 50 akun siswa","Admin Dashboard","Laporan PDF/Excel","Priority support"],cta:"Hubungi Kami",type:"Sekolah",harga:250000},
+    ];
+    return (
+      <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
+        {/* NAV */}
+        <nav className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={()=>go("landing")}>
+                <div className="bg-sky-500 p-1.5 rounded-xl shadow-sm"><GlassesIcon className="h-5 w-5 text-white"/></div>
+                <span className="text-xl font-extrabold tracking-tight text-slate-900">ARUNA <span className="text-sky-500 text-xs font-bold uppercase tracking-wider bg-sky-50 px-2 py-0.5 rounded-md ml-1">AR EdTech</span></span>
+              </div>
+              <div className="hidden md:flex items-center gap-6">
+                {["solusi","fitur","harga","faq"].map(id=>(
+                  <a key={id} href={`#${id}`} className="text-slate-600 hover:text-sky-600 font-semibold transition text-sm capitalize">{id==="solusi"?"Solusi":id==="fitur"?"Fitur":id==="harga"?"Harga":"FAQ"}</a>
+                ))}
+                <div className="w-px h-5 bg-slate-200"/>
+                <button onClick={()=>go("login")} className="text-slate-700 font-semibold hover:text-sky-600 transition text-sm">Masuk</button>
+                <button onClick={()=>go("register")} className="bg-sky-500 text-white px-5 py-2 rounded-full font-bold hover:bg-sky-600 transition shadow-sm text-sm">Daftar Gratis</button>
+              </div>
+              <button className="md:hidden p-2 text-slate-600" onClick={()=>setMobileOpen(!mobileOpen)}>
+                {mobileOpen?<XIcon className="h-6 w-6"/>:<MenuIcon className="h-6 w-6"/>}
+              </button>
+            </div>
+          </div>
+          {mobileOpen&&(
+            <div className="md:hidden bg-white border-t border-slate-100 shadow-lg">
+              <div className="px-4 py-4 space-y-2">
+                <button onClick={()=>go("login")} className="w-full px-4 py-3 text-slate-700 font-semibold border border-slate-200 rounded-xl text-sm">Masuk</button>
+                <button onClick={()=>go("register")} className="w-full px-4 py-3 bg-sky-500 text-white font-bold rounded-xl text-sm">Daftar Sekarang</button>
+              </div>
+            </div>
+          )}
+        </nav>
+
+        {/* HERO */}
+        <section className="relative pt-20 pb-28 overflow-hidden bg-white">
+          <div className="absolute inset-0 opacity-40" style={{backgroundImage:"linear-gradient(to right,#f1f5f9 1px,transparent 1px),linear-gradient(to bottom,#f1f5f9 1px,transparent 1px)",backgroundSize:"3rem 3rem",WebkitMaskImage:"radial-gradient(ellipse 70% 50% at 50% 0%,#000 60%,transparent 100%)"}}/>
+          <div className="absolute top-20 left-10 w-64 h-64 bg-sky-100 rounded-full blur-3xl opacity-40 animate-pulse-slow"/>
+          <div className="absolute bottom-10 right-10 w-48 h-48 bg-violet-100 rounded-full blur-3xl opacity-30"/>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-sky-50 border border-sky-100 text-sky-700 font-bold text-xs mb-8 gap-2">
+              <SparklesIcon className="w-3.5 h-3.5"/> ARUNA · Inovasi P2MW UNNES 2026 · Berbasis Riset Psikologi Klinis
+            </div>
+            <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6 max-w-4xl mx-auto leading-tight">
+              Edukasi Seksual Anak<br/>Melalui <span className="text-sky-500">Augmented Reality</span>
+            </h1>
+            <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Platform AR preventif kekerasan seksual anak usia dini. ARUNA menggabungkan Augmented Reality interaktif dengan panduan psikologi klinis—karakter edukatif muncul langsung di dunia nyata anak untuk pembelajaran yang aman dan berkesan.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mb-14">
+              <button onClick={()=>go("register")} className="bg-sky-500 text-white px-8 py-4 rounded-full font-bold text-base hover:bg-sky-600 transition shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                Mulai Akses Gratis <ArrowRightIcon className="h-5 w-5"/>
+              </button>
+              <button onClick={()=>go("login")} className="border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-base hover:border-sky-300 hover:text-sky-600 transition flex items-center justify-center gap-2">
+                <PlayCircleIcon className="h-5 w-5"/> Lihat Demo
+              </button>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+              {[{v:"10.000+",l:"Anak Terlindungi"},{v:"4.87★",l:"Rating Platform"},{v:"6 Modul",l:"Konten AR"},{v:"UNNES",l:"P2MW 2026"}].map(s=>(
+                <div key={s.l} className="bg-slate-50 border border-slate-100 rounded-2xl py-3 px-4">
+                  <div className="text-lg font-extrabold text-sky-600">{s.v}</div>
+                  <div className="text-xs text-slate-500 font-medium">{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* AR PREVIEW */}
+        <section className="py-16 bg-slate-900 text-white relative overflow-hidden">
+          <div className="absolute inset-0" style={{background:"radial-gradient(ellipse at top,rgba(14,165,233,0.15),transparent)"}}/>
+          <div className="max-w-5xl mx-auto px-4 relative z-10">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-extrabold mb-2">Intip Ruang Kelas AR Kami</h2>
+              <p className="text-slate-400 text-sm">Pengalaman belajar Augmented Reality interaktif langsung dari browser Anda</p>
+            </div>
+            <div className="relative w-full bg-slate-800 rounded-3xl overflow-hidden border border-slate-700 shadow-2xl" style={{aspectRatio:"16/9"}}>
+              <div className="absolute inset-0 bg-cover bg-center opacity-25" style={{backgroundImage:"url('https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=2000&auto=format&fit=crop')",filter:"blur(4px)"}}/>
+              <div className="absolute inset-0 bg-slate-900/70 flex flex-col items-center justify-center p-6">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mb-5 border" style={{background:"rgba(14,165,233,0.15)",borderColor:"rgba(14,165,233,0.3)"}}>
+                  <LockIcon className="h-9 w-9 text-sky-400"/>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Demo AR Terkunci</h3>
+                <p className="text-slate-300 max-w-sm mx-auto mb-6 text-center text-sm">Daftar gratis untuk mencoba pengalaman Augmented Reality edukasi ARUNA.</p>
+                <button onClick={()=>go("register")} className="bg-sky-500 text-white px-7 py-3 rounded-full font-bold hover:bg-sky-600 transition shadow-lg flex items-center gap-2">
+                  Buat Akun Gratis <PlayCircleIcon className="h-4 w-4"/>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SOLUSI */}
+        <section id="solusi" className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
+              <Badge color="sky">Kenapa ARUNA?</Badge>
+              <h2 className="text-3xl font-extrabold text-slate-900 mt-3">Solusi Komprehensif Kami</h2>
+              <p className="mt-3 text-slate-500 max-w-lg mx-auto text-sm">Dirancang khusus bersama pakar psikologi anak untuk orang tua dan institusi pendidikan</p>
+            </div>
+            <div id="fitur" className="grid md:grid-cols-3 gap-8">
+              {features.map(f=>(
+                <div key={f.title} className="p-7 border border-slate-100 rounded-3xl hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-slate-50 group cursor-default">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 bg-${f.color}-100 text-${f.color}-600 group-hover:scale-110 transition-transform`}>
+                    <f.icon className="h-6 w-6"/>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">{f.title}</h3>
+                  <p className="text-slate-500 leading-relaxed text-sm">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* HARGA */}
+        <section id="harga" className="py-24 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
+              <Badge color="emerald">Harga Terjangkau</Badge>
+              <h2 className="text-3xl font-extrabold text-slate-900 mt-3">Pilih Paket yang Tepat</h2>
+              <p className="mt-3 text-slate-500 text-sm">Mulai gratis, upgrade kapan saja</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {PKGS.map(p=>(
+                <div key={p.name} className={`relative rounded-3xl p-8 flex flex-col border ${p.popular?'bg-sky-900 text-white border-sky-700 shadow-2xl scale-105':'bg-white border-slate-200 shadow-sm'}`}>
+                  {p.popular&&<div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow">PALING POPULER</div>}
+                  <div className="mb-5">
+                    <h3 className={`text-xl font-bold mb-1 ${p.popular?'text-white':'text-slate-900'}`}>Premium {p.name}</h3>
+                    <p className={`text-sm ${p.popular?'text-sky-200':'text-slate-500'}`}>{p.desc}</p>
+                  </div>
+                  <div className="mb-6">
+                    <span className={`text-4xl font-extrabold ${p.popular?'text-white':'text-slate-900'}`}>{p.price}</span>
+                    <span className={`text-sm ${p.popular?'text-sky-300':'text-slate-500'}`}> {p.period}</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {p.features.map(f=>(
+                      <li key={f} className={`flex items-center gap-2 text-sm ${p.popular?'text-sky-100':'text-slate-600'}`}>
+                        <CheckIcon className={`w-4 h-4 shrink-0 ${p.popular?'text-sky-400':'text-sky-500'}`}/> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <button onClick={()=>{
+                    if(p.type==="free") go("register");
+                    else { setSelPkg({type:p.type,harga:p.harga}); go("payment"); }
+                  }} className={`w-full py-3 rounded-xl font-extrabold text-sm transition
+                    ${p.popular?'bg-white text-sky-700 hover:bg-sky-50':'p.name==="Instansi"'?'bg-slate-900 text-white hover:bg-slate-800':'border-2 border-slate-200 text-slate-800 hover:border-sky-300 hover:text-sky-600'}`}>
+                    {p.cta}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* TESTIMONI */}
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <Badge color="amber">Testimoni</Badge>
+              <h2 className="text-3xl font-extrabold text-slate-900 mt-3">Apa Kata Mereka?</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {testimonials.map(t=>(
+                <div key={t.name} className="bg-slate-50 border border-slate-100 rounded-3xl p-7 hover:shadow-md transition-all">
+                  <div className="flex gap-1 mb-4">{Array(5).fill(0).map((_,i)=><span key={i} className="text-amber-400">★</span>)}</div>
+                  <p className="text-slate-700 leading-relaxed mb-5 text-sm italic">"{t.text}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold">{t.avatar}</div>
+                    <div><p className="font-bold text-slate-800 text-sm">{t.name}</p><p className="text-xs text-slate-500">{t.role}</p></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="py-20 bg-slate-50">
+          <div className="max-w-3xl mx-auto px-4">
+            <div className="text-center mb-12"><Badge color="violet">FAQ</Badge><h2 className="text-3xl font-extrabold text-slate-900 mt-3">Pertanyaan Umum</h2></div>
+            <div className="space-y-3">
+              {FAQ.map((f,i)=>(
+                <div key={i} className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+                  <button onClick={()=>setFaqOpen(faqOpen===i?null:i)} className="w-full text-left px-6 py-4 flex justify-between items-center font-semibold text-slate-800 hover:text-sky-600 transition text-sm gap-4">
+                    <span>{f.q}</span>
+                    {faqOpen===i?<ChevUpIcon className="w-5 h-5 shrink-0"/>:<ChevDownIcon className="w-5 h-5 shrink-0"/>}
+                  </button>
+                  {faqOpen===i&&<div className="px-6 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">{f.a}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-20 bg-sky-600 text-white">
+          <div className="max-w-3xl mx-auto px-4 text-center">
+            <h2 className="text-4xl font-extrabold mb-4">Mulai Lindungi Anak Anda dengan ARUNA</h2>
+            <p className="text-sky-100 mb-8 text-lg">Gratis selamanya untuk modul pertama. Tidak perlu kartu kredit.</p>
+            <button onClick={()=>go("register")} className="bg-white text-sky-700 px-10 py-4 rounded-full font-extrabold text-lg hover:bg-sky-50 transition shadow-xl">
+              Daftar Gratis Sekarang →
+            </button>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="bg-slate-900 text-slate-400 py-14 border-t border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-10">
+            <div className="md:col-span-2">
+              <div className="flex items-center mb-4 gap-2">
+                <div className="bg-sky-500 p-1.5 rounded-lg"><GlassesIcon className="h-5 w-5 text-white"/></div>
+                <span className="text-lg font-bold text-white">ARUNA AR EdTech</span>
+              </div>
+              <p className="text-sm leading-relaxed mb-4">Platform edukasi preventif kekerasan seksual anak berbasis Virtual Reality. Inovasi P2MW UNNES 2026.</p>
+              <div className="flex gap-3">
+                {[MailIcon,PhoneIcon,GlobeIcon].map((Ic2,i)=>(
+                  <div key={i} className="w-9 h-9 bg-slate-800 rounded-xl flex items-center justify-center hover:bg-slate-700 cursor-pointer transition">
+                    <Ic2 className="w-4 h-4"/>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="font-bold text-white mb-3 text-sm">Platform</p>
+              {["Fitur","Paket Harga","Demo AR","Blog Parenting"].map(l=><a key={l} href="#" className="block text-sm py-1.5 hover:text-white transition">{l}</a>)}
+            </div>
+            <div>
+              <p className="font-bold text-white mb-3 text-sm">Perusahaan</p>
+              {["Tentang Kami","Tim UNNES","Kebijakan Privasi","Syarat & Ketentuan"].map(l=><a key={l} href="#" className="block text-sm py-1.5 hover:text-white transition">{l}</a>)}
+            </div>
+          </div>
+          <div className="max-w-7xl mx-auto px-4 mt-10 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs">© 2026 ARUNA AR EdTech (Ahmad Fachri, dkk). Hak cipta dilindungi.</p>
+            <p className="text-xs">Universitas Negeri Semarang · Tim P2MW 2026</p>
+          </div>
+        </footer>
+      </div>
+    );
+  };
+
+  // ── AUTH ─────────────────────────────────────────────────────────
+  const AuthPage = ({isLogin}) => (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-sky-50 flex font-sans">
+      <div className="hidden lg:flex lg:w-1/2 bg-sky-900 text-white flex-col justify-between p-12">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={()=>go("landing")}>
+          <div className="bg-sky-500 p-2 rounded-xl"><GlassesIcon className="h-6 w-6"/></div>
+          <span className="text-xl font-extrabold">ARUNA AR EdTech</span>
+        </div>
+        <div>
+          <h2 className="text-4xl font-extrabold mb-4 leading-tight">ARUNA: Lindungi Anak dengan Augmented Reality</h2>
+          <p className="text-sky-200 mb-8 leading-relaxed text-sm">Platform AR edukasi seksual anak berbasis riset psikologi klinis UNNES 2026.</p>
+          <div className="space-y-3">
+            {["✓ 6 Modul AR Interaktif","✓ Dashboard Orang Tua Real-time","✓ Pusat Parenting Lengkap","✓ Tersertifikasi Ahli Psikologi"].map(f=>(
+              <div key={f} className="text-sky-100 text-sm">{f}</div>
+            ))}
+          </div>
+        </div>
+        <p className="text-sky-300 text-xs">© 2026 ARUNA AR EdTech · UNNES P2MW 2026</p>
+      </div>
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4 cursor-pointer" onClick={()=>go("landing")}>
+              <div className="bg-sky-500 p-3 rounded-2xl shadow-lg"><GlassesIcon className="h-8 w-8 text-white"/></div>
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-900">{isLogin?"Masuk ke Akun Anda":"Buat Akun ARUNA Gratis"}</h2>
+            <p className="text-slate-500 mt-1 text-sm">{isLogin?"Selamat datang kembali!":"Daftar gratis, upgrade kapan saja"}</p>
+          </div>
+          <div className="bg-white py-8 px-6 shadow-xl rounded-3xl border border-slate-100">
+            {isLogin&&(
+              <div className="mb-5 p-3 bg-sky-50 border border-sky-100 rounded-xl text-xs text-sky-700 flex items-center gap-2">
+                <InfoIcon className="w-4 h-4 shrink-0"/> Demo: gunakan tombol di bawah untuk masuk sebagai Admin
+              </div>
+            )}
+            <form className="space-y-4" onSubmit={e=>isLogin?handleLogin(e):handleRegister(e)}>
+              {!isLogin&&(
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Nama Lengkap</label>
+                  <input type="text" required className="block w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm" placeholder="Bunda / Ayah..."/>
+                </div>
+              )}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Email</label>
+                <input type="email" required className="block w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm" placeholder="nama@email.com"/>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5">Kata Sandi</label>
+                <input type="password" required className="block w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm" placeholder="••••••••"/>
+              </div>
+              {!isLogin&&(
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">Peran Anda</label>
+                  <select className="block w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm bg-white">
+                    <option>Orang Tua</option><option>Guru / Pendidik</option><option>Koordinator Sekolah</option>
+                  </select>
+                </div>
+              )}
+              <button type="submit" className="w-full py-3 px-4 rounded-xl font-bold text-white bg-sky-500 hover:bg-sky-600 transition shadow-sm text-sm">
+                {isLogin?"Masuk Sekarang":"Buat Akun & Mulai"}
+              </button>
+            </form>
+            {isLogin&&(
+              <button onClick={e=>handleLogin(e,"admin")} className="w-full mt-3 py-3 px-4 rounded-xl font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition text-sm flex items-center justify-center gap-2">
+                <ShieldIcon className="w-4 h-4"/> Masuk sebagai Admin (Demo)
+              </button>
+            )}
+            <div className="mt-5 text-center text-sm">
+              <span className="text-slate-500">{isLogin?"Belum punya akun? ":"Sudah punya akun? "}</span>
+              <button onClick={()=>go(isLogin?"register":"login")} className="font-bold text-sky-600 hover:text-sky-700">{isLogin?"Daftar di sini":"Masuk di sini"}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── USER DASHBOARD ────────────────────────────────────────────────
+  const UserDashboard = () => {
+    const tabs=[
+      {id:"home",label:"Beranda",icon:LayoutDashIcon},
+      {id:"modules",label:"Modul AR",icon:GlassesIcon},
+      {id:"children",label:"Profil Anak",icon:UsersIcon},
+      {id:"parenting",label:"Pusat Parenting",icon:BookOpenIcon},
+      {id:"reports",label:"Laporan",icon:BarChart3Icon},
+      {id:"settings",label:"Pengaturan",icon:SettingsIcon},
+    ];
+    const filtered = PARENTING.filter(c=>c.title.toLowerCase().includes(search.toLowerCase())||c.type.toLowerCase().includes(search.toLowerCase()));
+    return (
+      <div className="min-h-screen bg-slate-50 flex font-sans">
+        {/* SIDEBAR */}
+        <div className="w-60 bg-white border-r border-slate-100 hidden md:flex flex-col shadow-sm">
+          <div className="h-16 flex items-center px-5 border-b border-slate-100 gap-2">
+            <div className="bg-sky-500 p-1.5 rounded-lg"><GlassesIcon className="h-5 w-5 text-white"/></div>
+            <span className="font-extrabold text-slate-900 text-base">ARUNA</span>
+            <span className="text-xs font-bold text-sky-500">Dashboard</span>
+          </div>
+          <div className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+            {tabs.map(t=>(
+              <button key={t.id} onClick={()=>setDashTab(t.id)}
+                className={`w-full flex items-center px-3 py-2.5 rounded-xl font-semibold text-sm transition-all
+                  ${dashTab===t.id?'bg-sky-50 text-sky-700':'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}>
+                <t.icon className="h-4 w-4 mr-3 shrink-0"/> {t.label}
+                {t.id==="parenting"&&!isPremium&&<LockIcon className="h-3 w-3 ml-auto text-slate-400"/>}
+              </button>
+            ))}
+          </div>
+          <div className="p-3 border-t border-slate-100 space-y-1">
+            <button className="w-full flex items-center px-3 py-2.5 rounded-xl font-semibold text-sm text-slate-500 hover:bg-slate-50 transition">
+              <HelpCircIcon className="h-4 w-4 mr-3"/> Bantuan
+            </button>
+            <button onClick={()=>{setUser(null);go("landing");addToast("Berhasil keluar.","info");}}
+              className="w-full flex items-center px-3 py-2.5 rounded-xl font-semibold text-sm text-rose-500 hover:bg-rose-50 transition">
+              <LogOutIcon className="h-4 w-4 mr-3"/> Keluar
+            </button>
+          </div>
+        </div>
+        {/* MAIN */}
+        <div className="flex-1 flex flex-col min-w-0">
+          <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-20 shadow-sm">
+            <h2 className="text-base font-bold text-slate-800">{tabs.find(t=>t.id===dashTab)?.label||"Beranda"}</h2>
+            <div className="flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 w-48">
+                <SearchIcon className="w-4 h-4 text-slate-400"/>
+                <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari konten..." className="bg-transparent text-sm outline-none w-full text-slate-700 placeholder-slate-400"/>
+              </div>
+              <button className="relative p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl transition">
+                <BellIcon className="w-5 h-5"/>
+                {notifs>0&&<span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{notifs}</span>}
+              </button>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <div className="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold text-sm">{user?.name.charAt(0)}</div>
+                <div className="hidden md:block">
+                  <p className="text-xs font-bold text-slate-700 leading-tight">{user?.name}</p>
+                  <Badge color={isPremium?"amber":"slate"}>{isPremium?"Premium":"Gratis"}</Badge>
+                </div>
+              </div>
+            </div>
+          </header>
+          <main className="flex-1 overflow-y-auto p-6">
+
+            {/* HOME */}
+            {dashTab==="home"&&(
+              <div className="space-y-6">
+                {!isPremium&&(
+                  <div className="bg-gradient-to-r from-sky-500 to-sky-700 rounded-3xl p-7 text-white flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
+                    <div>
+                      <p className="text-xs font-bold text-sky-200 mb-1 uppercase tracking-wider">Upgrade Akun</p>
+                      <h3 className="text-xl font-extrabold mb-1">Buka Potensi Penuh ARUNA!</h3>
+                      <p className="text-sky-100 text-sm">Akses semua modul AR, laporan mendalam, dan Pusat Parenting eksklusif.</p>
+                    </div>
+                    <button onClick={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}}
+                      className="bg-white text-sky-700 px-6 py-2.5 rounded-full font-extrabold hover:bg-sky-50 transition shadow text-sm shrink-0 whitespace-nowrap">
+                      Pilih Paket Sekarang →
+                    </button>
+                  </div>
+                )}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard icon={PlayCircleIcon} label="Sesi AR Selesai" value="7" sub="Total sesi aktif" color="sky" trend={14}/>
+                  <StatCard icon={CheckCircIcon} label="Modul Tuntas" value="1/6" sub="Progress belajar" color="emerald"/>
+                  <StatCard icon={ClockIcon} label="Waktu Belajar" value="1j 42m" sub="Minggu ini" color="amber" trend={5}/>
+                  <StatCard icon={StarIcon} label="Skor Rata-rata" value="88%" sub="Pemahaman anak" color="violet" trend={3}/>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-extrabold text-slate-800">Lanjutkan Belajar</h3>
+                    <button onClick={()=>setDashTab("modules")} className="text-sm text-sky-600 font-semibold hover:underline">Lihat semua →</button>
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {VR_MODULES.slice(0,2).map(mod=>(
+                      <ModuleCard key={mod.id} mod={mod} isPremium={isPremium}
+                        onStart={()=>{setVrMod(mod);setVrSession(true);addToast(`Memulai ${mod.title}...`,"info");}}
+                        onUpgrade={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}}/>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm">
+                  <h3 className="font-extrabold text-slate-800 mb-4">Aktivitas Terkini</h3>
+                  <div className="space-y-3">
+                    {[
+                      {icon:PlayCircleIcon,text:"Arya menyelesaikan Modul 1 dengan skor 92%",time:"2j lalu",color:"emerald"},
+                      {icon:AwardIcon,text:"Badge 'Penjelajah AR' diraih oleh Nisa",time:"1 hari lalu",color:"amber"},
+                      {icon:FileTextIcon,text:"Laporan mingguan baru tersedia untuk diunduh",time:"2 hari lalu",color:"sky"},
+                    ].map((a,i)=>(
+                      <div key={i} className="flex items-center gap-3 py-2 border-b border-slate-50 last:border-0">
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-${a.color}-100 text-${a.color}-600`}>
+                          <a.icon className="w-4 h-4"/>
+                        </div>
+                        <p className="text-sm text-slate-600 flex-1">{a.text}</p>
+                        <span className="text-xs text-slate-400 whitespace-nowrap">{a.time}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* MODULES */}
+            {dashTab==="modules"&&(
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div><h3 className="font-extrabold text-slate-800 text-lg">Modul Augmented Reality</h3><p className="text-sm text-slate-500">6 modul AR edukasi berbasis riset psikologi klinis</p></div>
+                  <Badge color={isPremium?"amber":"slate"}>{isPremium?"Akses Penuh":"1/6 Tersedia"}</Badge>
+                </div>
+                <div className="grid md:grid-cols-2 gap-5">
+                  {VR_MODULES.map(mod=>(
+                    <ModuleCard key={mod.id} mod={mod} isPremium={isPremium}
+                      onStart={()=>{setVrMod(mod);setVrSession(true);addToast(`Memulai ${mod.title}...`,"info");}}
+                      onUpgrade={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}}/>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CHILDREN */}
+            {dashTab==="children"&&(
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div><h3 className="font-extrabold text-slate-800 text-lg">Profil Anak</h3><p className="text-sm text-slate-500">{CHILDREN.length} profil anak terdaftar</p></div>
+                  <button onClick={()=>addToast("Fitur tambah profil anak segera hadir!","info")} className="bg-sky-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-sky-600 transition flex items-center gap-2">
+                    <UserPlusIcon className="w-4 h-4"/> Tambah Profil
+                  </button>
+                </div>
+                <div className="grid md:grid-cols-2 gap-5">
+                  {CHILDREN.map(c=><ChildCard key={c.id} child={c} onToast={addToast}/>)}
+                  {!isPremium&&(
+                    <div className="border-2 border-dashed border-slate-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer" onClick={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}}>
+                      <LockIcon className="w-10 h-10 text-slate-300 mb-3"/>
+                      <p className="font-bold text-slate-500 text-sm mb-1">Tambah hingga 3 profil anak</p>
+                      <p className="text-xs text-slate-400 mb-4">Upgrade ke Premium Keluarga</p>
+                      <span className="text-xs font-bold text-sky-600 border border-sky-200 px-4 py-2 rounded-xl hover:bg-sky-50 transition">Upgrade Sekarang</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* PARENTING */}
+            {dashTab==="parenting"&&(
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div><h3 className="font-extrabold text-slate-800 text-lg">Pusat Parenting</h3><p className="text-sm text-slate-500">Artikel, video, dan panduan eksklusif dari para ahli</p></div>
+                  {!isPremium&&<button onClick={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}} className="bg-amber-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-amber-600 transition flex items-center gap-2"><ZapIcon className="w-4 h-4"/> Buka Semua</button>}
+                </div>
+                {!isPremium?(
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 rounded-3xl p-10 text-center">
+                    <div className="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><LockIcon className="h-8 w-8 text-amber-500"/></div>
+                    <h4 className="text-lg font-extrabold text-slate-800 mb-2">Konten Eksklusif untuk Premium</h4>
+                    <p className="text-slate-500 max-w-md mx-auto mb-6 text-sm">Perpustakaan artikel psikologi, panduan komunikasi anak, dan rekaman webinar bersama ahli.</p>
+                    <button onClick={()=>{setSelPkg({type:"Keluarga",harga:50000});go("payment");}} className="bg-amber-500 text-white px-7 py-3 rounded-full font-extrabold hover:bg-amber-600 transition shadow-md text-sm">
+                      Upgrade ke Premium — Rp 50.000/bln
+                    </button>
+                  </div>
+                ):(
+                  <>
+                    <div className="flex gap-3 mb-5">
+                      <div className="flex-1 flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-2.5">
+                        <SearchIcon className="w-4 h-4 text-slate-400"/>
+                        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari artikel, video..." className="bg-transparent text-sm outline-none w-full text-slate-700 placeholder-slate-400"/>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-5">
+                      {filtered.map(c=>{
+                        const saved=savedIds.includes(c.id);
+                        return (
+                          <div key={c.id} className="bg-white border border-slate-100 rounded-2xl p-5 hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group">
+                            <div className={`w-full h-28 bg-${c.color}-50 rounded-xl mb-4 flex items-center justify-center group-hover:bg-${c.color}-100 transition`}>
+                              <c.icon className={`h-9 w-9 text-${c.color}-400`}/>
+                            </div>
+                            <div className="flex justify-between items-start mb-2">
+                              <Badge color={c.color}>{c.type}</Badge>
+                              <button onClick={()=>{setSavedIds(p=>saved?p.filter(id=>id!==c.id):[...p,c.id]);addToast(saved?"Dihapus dari simpanan":"Disimpan!",saved?"info":"success");}}>
+                                <BookMarkIcon className={`w-4 h-4 transition ${saved?'text-sky-500':'text-slate-300 hover:text-slate-500'}`}/>
+                              </button>
+                            </div>
+                            <h4 className="font-bold text-slate-800 text-sm mb-1 leading-tight">{c.title}</h4>
+                            <p className="text-xs text-slate-400">{c.author} · {c.date}</p>
+                            <div className="flex items-center justify-between mt-3">
+                              <span className="text-xs text-slate-400">{c.read}</span>
+                              <span className="flex items-center gap-1 text-xs text-slate-400"><ThumbsUpIcon className="w-3 h-3"/> {c.likes}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* REPORTS */}
+            {dashTab==="reports"&&(
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <div><h3 className="font-extrabold text-slate-800 text-lg">Laporan Perkembangan</h3><p className="text-sm text-slate-500">Analitik belajar anak Anda</p></div>
+                  <button onClick={()=>addToast("Laporan diunduh sebagai PDF","success")} className="bg-sky-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-sky-600 transition flex items-center gap-2">
+                    <DownloadIcon className="w-4 h-4"/> Unduh PDF
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard icon={PlayCircleIcon} label="Total Sesi" value="8" color="sky"/>
+                  <StatCard icon={ClockIcon} label="Waktu Total" value="2j 15m" color="emerald"/>
+                  <StatCard icon={TargetIcon} label="Skor Tertinggi" value="96%" color="amber"/>
+                  <StatCard icon={TrendUpIcon} label="Peningkatan" value="+18%" color="violet" trend={18}/>
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+                  <h4 className="font-extrabold text-slate-800 mb-5">Progress per Modul</h4>
+                  <div className="space-y-5">
+                    {[
+                      {name:"Modul 1: Mengenal Anggota Tubuh",progress:100,sessions:3,score:92,color:"emerald"},
+                      {name:"Modul 2: Sentuhan Boleh & Tidak Boleh",progress:40,sessions:2,score:78,color:"sky"},
+                      {name:"Modul 3: Berteriak & Lari",progress:10,sessions:1,score:65,color:"amber"},
+                      {name:"Modul 4–6 (Terkunci)",progress:0,sessions:0,score:0,color:"slate",locked:!isPremium},
+                    ].map((m,i)=>(
+                      <div key={i}>
+                        <div className="flex justify-between items-center mb-1.5">
+                          <span className="text-sm font-semibold text-slate-700">{m.name}</span>
+                          <div className="flex items-center gap-3">
+                            {m.locked?<Badge color="slate">Terkunci</Badge>:(
+                              <>
+                                <span className="text-xs text-slate-400">{m.sessions} sesi · Skor {m.score}%</span>
+                                <span className="text-sm font-extrabold text-slate-700">{m.progress}%</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                        <ProgressBar value={m.locked?0:m.progress} color={m.color}/>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SETTINGS */}
+            {dashTab==="settings"&&(
+              <div className="max-w-2xl space-y-5">
+                <h3 className="font-extrabold text-slate-800 text-lg">Pengaturan Akun</h3>
+                {[
+                  {title:"Informasi Profil",desc:"Ubah nama, email, dan foto profil"},
+                  {title:"Keamanan & Password",desc:"Ganti password dan pengaturan keamanan"},
+                  {title:"Notifikasi Email",desc:"Atur jenis email yang ingin Anda terima"},
+                  {title:"Paket Langganan",desc:user?.plan==="free"?"Akun Gratis — Upgrade sekarang":`Paket ${user?.plan} aktif`},
+                  {title:"Hapus Akun",desc:"Hapus akun dan seluruh data secara permanen",danger:true},
+                ].map((s,i)=>(
+                  <div key={i} onClick={()=>addToast(s.danger?"Konfirmasi dikirim ke email Anda":`Membuka: ${s.title}...`,s.danger?"warning":"info")}
+                    className={`bg-white border rounded-2xl p-5 flex justify-between items-center shadow-sm hover:shadow-md transition cursor-pointer ${s.danger?'border-rose-100 hover:border-rose-300':'border-slate-100'}`}>
+                    <div>
+                      <p className={`font-bold text-sm ${s.danger?'text-rose-600':'text-slate-800'}`}>{s.title}</p>
+                      <p className="text-xs text-slate-500 mt-0.5">{s.desc}</p>
+                    </div>
+                    <ChevRightIcon className={`w-5 h-5 ${s.danger?'text-rose-400':'text-slate-400'}`}/>
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    );
+  };
+
+  // ── PAYMENT ───────────────────────────────────────────────────────
+  const PaymentPage = () => {
+    if(!selPkg) return (
+      <div className="min-h-screen bg-slate-50 py-12 px-4 font-sans">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center mb-10">
+            <button onClick={()=>go("dashboard")} className="mr-4 p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-slate-800 transition border border-slate-200">
+              <ChevRightIcon className="h-5 w-5 rotate-180"/>
+            </button>
+            <h2 className="text-2xl font-extrabold text-slate-900">Pilih Paket</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            {[
+              {name:"Keluarga",price:"Rp 50.000",type:"Keluarga",harga:50000,desc:"1–3 anak di rumah",features:["Semua 6 Modul AR","Profil hingga 3 anak","Laporan lengkap","Pusat Parenting"]},
+              {name:"Instansi",price:"Rp 250.000",type:"Sekolah",harga:250000,desc:"TK, PAUD & Organisasi",features:["Hingga 50 akun siswa","Admin Dashboard","Laporan PDF/Excel","Priority support"],dark:true},
+            ].map(p=>(
+              <div key={p.name} className={`p-8 rounded-3xl border flex flex-col ${p.dark?'bg-sky-900 text-white border-sky-700':'bg-white border-slate-200'}`}>
+                <h3 className="text-xl font-extrabold mb-1">{p.name}</h3>
+                <p className={`text-sm mb-4 ${p.dark?'text-sky-200':'text-slate-500'}`}>{p.desc}</p>
+                <div className="mb-6"><span className="text-4xl font-extrabold">{p.price}</span><span className={`text-sm ${p.dark?'text-sky-300':'text-slate-500'}`}>/bln</span></div>
+                <ul className="space-y-2.5 flex-1 mb-6">
+                  {p.features.map(f=><li key={f} className={`flex items-center gap-2 text-sm ${p.dark?'text-sky-100':'text-slate-600'}`}><CheckIcon className={`w-4 h-4 ${p.dark?'text-sky-400':'text-sky-500'}`}/>{f}</li>)}
+                </ul>
+                <button onClick={()=>setSelPkg({type:p.type,harga:p.harga})} className={`w-full py-3 rounded-xl font-extrabold text-sm ${p.dark?'bg-white text-sky-700 hover:bg-sky-50':'bg-sky-500 text-white hover:bg-sky-600'} transition`}>
+                  Pilih {p.name}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
+    return (
+      <div className="min-h-screen bg-slate-50 py-12 px-4 font-sans">
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center mb-8">
+            <button onClick={()=>setSelPkg(null)} className="mr-4 p-2 bg-white rounded-full shadow-sm text-slate-500 hover:text-slate-800 transition border border-slate-200">
+              <ChevRightIcon className="h-5 w-5 rotate-180"/>
+            </button>
+            <h2 className="text-xl font-extrabold text-slate-900">Checkout</h2>
+          </div>
+          <div className="bg-white rounded-3xl shadow-lg border border-slate-100 overflow-hidden">
+            <div className="p-6 border-b border-slate-100">
+              <h3 className="font-extrabold text-slate-800 mb-4">Ringkasan Pesanan</h3>
+              <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 flex items-center gap-4">
+                <div className="w-12 h-12 bg-sky-500 rounded-xl flex items-center justify-center"><GlassesIcon className="w-6 h-6 text-white"/></div>
+                <div className="flex-1">
+                  <p className="font-extrabold text-slate-800 text-sm">Premium {selPkg.type}</p>
+                  <p className="text-xs text-slate-500">Akses 1 bulan · ARUNA AR EdTech</p>
+                </div>
+                <p className="font-extrabold text-sky-600">Rp {selPkg.harga.toLocaleString("id-ID")}</p>
+              </div>
+              <div className="mt-4 space-y-2 text-sm">
+                <div className="flex justify-between text-slate-600"><span>Subtotal</span><span>Rp {selPkg.harga.toLocaleString("id-ID")}</span></div>
+                <div className="flex justify-between text-emerald-600 font-semibold"><span>Diskon Demo</span><span>- Rp 0</span></div>
+                <div className="flex justify-between text-slate-900 font-extrabold text-base border-t border-slate-100 pt-2 mt-2"><span>Total</span><span>Rp {selPkg.harga.toLocaleString("id-ID")}</span></div>
+              </div>
+            </div>
+            <div className="p-6 border-b border-slate-100">
+              <h3 className="font-extrabold text-slate-800 mb-4">Metode Pembayaran</h3>
+              <div className="grid grid-cols-3 gap-3">
+                {[{id:"transfer",label:"Transfer Bank",icon:ReceiptIcon},{id:"qris",label:"QRIS",icon:CreditCardIcon},{id:"ewallet",label:"E-Wallet",icon:WalletIcon}].map(m=>(
+                  <button key={m.id} onClick={()=>setPmtMethod(m.id)}
+                    className={`p-3 rounded-xl border-2 text-center flex flex-col items-center gap-1.5 transition
+                      ${pmtMethod===m.id?'border-sky-500 bg-sky-50 text-sky-700':'border-slate-200 text-slate-500 hover:border-slate-300'}`}>
+                    <m.icon className="w-5 h-5"/>
+                    <span className="text-xs font-bold">{m.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="flex items-start gap-3 mb-5 bg-slate-50 rounded-xl p-3 text-xs text-slate-500">
+                <ShieldIcon className="w-4 h-4 text-sky-500 shrink-0 mt-0.5"/>
+                <span>Pembayaran aman & terenkripsi. Ini adalah simulasi demo.</span>
+              </div>
+              <button onClick={processPayment} className="w-full bg-sky-500 text-white font-extrabold py-4 rounded-xl hover:bg-sky-600 transition shadow-md text-base flex items-center justify-center gap-2">
+                <CheckCirc2Icon className="w-5 h-5"/> Selesaikan Pembayaran
+              </button>
+              <button onClick={()=>go("dashboard")} className="w-full mt-3 text-slate-400 text-sm py-2 hover:text-slate-600 transition">
+                Batal, kembali ke dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ── ADMIN ─────────────────────────────────────────────────────────
+  const AdminDashboard = () => {
+    const aTabs=[
+      {id:"overview",label:"Overview",icon:LayoutDashIcon},
+      {id:"users",label:"Pengguna",icon:UsersIcon},
+      {id:"content",label:"Konten AR",icon:GlassesIcon},
+      {id:"revenue",label:"Pendapatan",icon:BarChart3Icon},
+    ];
+    const recentUsers=[
+      {name:"Bunda Sari",email:"sari@gmail.com",plan:"Keluarga",joined:"31 Mar 2026",status:"active"},
+      {name:"TK Annisa",email:"admin@tkannisa.sch.id",plan:"Sekolah",joined:"30 Mar 2026",status:"active"},
+      {name:"Pak Doni",email:"doni@yahoo.com",plan:"Gratis",joined:"29 Mar 2026",status:"inactive"},
+      {name:"Bunda Lia",email:"lia@outlook.com",plan:"Keluarga",joined:"28 Mar 2026",status:"active"},
+    ];
+    return (
+      <div className="min-h-screen bg-slate-50 flex font-sans">
+        <div className="w-60 bg-slate-900 text-slate-300 hidden md:flex flex-col">
+          <div className="h-16 flex items-center px-5 border-b border-slate-800 gap-2">
+            <div className="bg-sky-500 p-1.5 rounded-lg"><GlassesIcon className="h-5 w-5 text-white"/></div>
+            <span className="text-base font-extrabold text-white">ARUNA Admin</span>
+          </div>
+          <div className="flex-1 py-4 px-3 space-y-1">
+            {aTabs.map(t=>(
+              <button key={t.id} onClick={()=>setAdminTab(t.id)}
+                className={`w-full flex items-center px-3 py-2.5 rounded-xl font-semibold text-sm transition ${adminTab===t.id?'bg-sky-600 text-white':'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+                <t.icon className="h-4 w-4 mr-3 shrink-0"/> {t.label}
+              </button>
+            ))}
+          </div>
+          <div className="p-3 border-t border-slate-800">
+            <button onClick={()=>{setUser(null);go("landing");addToast("Keluar dari admin panel.","info");}}
+              className="w-full flex items-center px-3 py-2.5 rounded-xl text-sm text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition font-semibold">
+              <LogOutIcon className="h-4 w-4 mr-3"/> Keluar
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 flex flex-col min-w-0">
+          <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 shadow-sm">
+            <h2 className="font-extrabold text-slate-800">Admin Panel — {aTabs.find(t=>t.id===adminTab)?.label}</h2>
+            <div className="flex items-center gap-3">
+              <button onClick={()=>addToast("Data di-refresh!","success")} className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-xl transition">
+                <RefreshIcon className="w-5 h-5"/>
+              </button>
+              <div className="w-8 h-8 bg-sky-900 rounded-full flex items-center justify-center text-white font-bold text-sm">A</div>
+            </div>
+          </header>
+          <main className="flex-1 p-6 overflow-y-auto">
+            {adminTab==="overview"&&(
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard icon={UsersIcon} label="Total Pengguna" value="1,248" sub="Aktif bulan ini" color="sky" trend={12}/>
+                  <StatCard icon={PlayCircleIcon} label="Sesi AR Hari Ini" value="87" sub="Dari 312 kemarin" color="emerald" trend={-3}/>
+                  <StatCard icon={CreditCardIcon} label="Pendapatan" value="Rp 5.2jt" sub="Target: Rp 8jt" color="amber" trend={8}/>
+                  <StatCard icon={StarIcon} label="Rating Platform" value="4.87" sub="Dari 523 ulasan" color="violet" trend={2}/>
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+                  <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                    <h3 className="font-extrabold text-slate-800">Pengguna Terbaru</h3>
+                    <button onClick={()=>setAdminTab("users")} className="text-sm text-sky-600 font-semibold hover:underline">Lihat semua →</button>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-slate-50 border-b border-slate-100">
+                        <tr>{["Nama","Email","Paket","Bergabung","Status"].map(h=><th key={h} className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">{h}</th>)}</tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {recentUsers.map((u,i)=>(
+                          <tr key={i} className="hover:bg-slate-50 transition">
+                            <td className="px-4 py-3 font-semibold text-slate-800">{u.name}</td>
+                            <td className="px-4 py-3 text-slate-500">{u.email}</td>
+                            <td className="px-4 py-3"><Badge color={u.plan==="Sekolah"?"violet":u.plan==="Keluarga"?"amber":"slate"}>{u.plan}</Badge></td>
+                            <td className="px-4 py-3 text-slate-500">{u.joined}</td>
+                            <td className="px-4 py-3"><Badge color={u.status==="active"?"emerald":"slate"}>{u.status==="active"?"Aktif":"Tidak Aktif"}</Badge></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+                  <h3 className="font-extrabold text-slate-800 mb-5">Penggunaan Modul AR</h3>
+                  <div className="space-y-4">
+                    {[
+                      {name:"Modul 1: Mengenal Anggota Tubuh",sessions:632,pct:87,color:"sky"},
+                      {name:"Modul 2: Sentuhan Boleh & Tidak Boleh",sessions:298,pct:41,color:"rose"},
+                      {name:"Modul 3: Berteriak & Lari",sessions:187,pct:26,color:"amber"},
+                      {name:"Modul 4: Cerita kepada Orang Dewasa",sessions:94,pct:13,color:"violet"},
+                    ].map(m=>(
+                      <div key={m.name}>
+                        <div className="flex justify-between text-sm mb-1.5">
+                          <span className="font-semibold text-slate-700">{m.name}</span>
+                          <span className="text-slate-400 text-xs">{m.sessions} sesi ({m.pct}%)</span>
+                        </div>
+                        <ProgressBar value={m.pct} color={m.color}/>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {adminTab==="users"&&(
+              <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                  <h3 className="font-extrabold text-slate-800">Semua Pengguna (1,248)</h3>
+                  <div className="flex gap-2">
+                    <button onClick={()=>addToast("Filter diterapkan","info")} className="px-3 py-2 text-sm border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 transition flex items-center gap-1.5"><FilterIcon className="w-4 h-4"/> Filter</button>
+                    <button onClick={()=>addToast("Data diunduh sebagai Excel","success")} className="px-3 py-2 text-sm bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition flex items-center gap-1.5"><DownloadIcon className="w-4 h-4"/> Export</button>
+                  </div>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50 border-b border-slate-100">
+                      <tr>{["Nama","Email","Paket","Bergabung","Sesi AR","Status"].map(h=><th key={h} className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wide">{h}</th>)}</tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {[...recentUsers,...recentUsers].map((u,i)=>(
+                        <tr key={i} className="hover:bg-slate-50 transition">
+                          <td className="px-4 py-3 font-semibold text-slate-800">{u.name}</td>
+                          <td className="px-4 py-3 text-slate-500">{u.email}</td>
+                          <td className="px-4 py-3"><Badge color={u.plan==="Sekolah"?"violet":u.plan==="Keluarga"?"amber":"slate"}>{u.plan}</Badge></td>
+                          <td className="px-4 py-3 text-slate-500">{u.joined}</td>
+                          <td className="px-4 py-3 text-slate-600">{(i*3+4)%20+1}</td>
+                          <td className="px-4 py-3"><Badge color={u.status==="active"?"emerald":"slate"}>{u.status==="active"?"Aktif":"Tidak Aktif"}</Badge></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+            {adminTab==="content"&&(
+              <div className="space-y-5">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-extrabold text-slate-800 text-lg">Manajemen Konten AR</h3>
+                  <button onClick={()=>addToast("Fitur upload konten segera hadir!","info")} className="bg-sky-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-sky-600 transition">+ Upload Modul</button>
+                </div>
+                <div className="grid gap-4">
+                  {VR_MODULES.map(m=>{
+                    const IcMod=m.icon;
+                    return (
+                      <div key={m.id} className="bg-white border border-slate-100 rounded-2xl p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition">
+                        <div className={`w-12 h-12 ${m.iconBg} ${m.iconColor} rounded-xl flex items-center justify-center shrink-0`}><IcMod className="w-6 h-6"/></div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <p className="font-bold text-slate-800 text-sm truncate">{m.title}</p>
+                            {m.isNew&&<Badge color="rose">Baru</Badge>}
+                          </div>
+                          <p className="text-xs text-slate-500">{m.duration} · {m.ageGroup} · ⭐ {m.rating}</p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge color={m.premium?"violet":"emerald"}>{m.premium?"Premium":"Gratis"}</Badge>
+                          <button onClick={()=>addToast(`Edit: ${m.title}`,"info")} className="text-xs font-semibold text-slate-500 hover:text-sky-600 border border-slate-200 px-3 py-1.5 rounded-lg transition">Edit</button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {adminTab==="revenue"&&(
+              <div className="space-y-5">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <StatCard icon={TrendUpIcon} label="Pendapatan Bulan Ini" value="Rp 5.2jt" color="emerald" trend={8}/>
+                  <StatCard icon={UsersIcon} label="Pelanggan Premium" value="104" color="sky" trend={12}/>
+                  <StatCard icon={TargetIcon} label="Target Tercapai" value="65%" color="amber"/>
+                </div>
+                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm">
+                  <h3 className="font-extrabold text-slate-800 mb-5">Breakdown per Paket</h3>
+                  <div className="space-y-4">
+                    {[
+                      {name:"Paket Keluarga (Rp 50rb/bln)",count:78,revenue:"Rp 3.9jt",pct:75,color:"sky"},
+                      {name:"Paket Instansi (Rp 250rb/bln)",count:5,revenue:"Rp 1.25jt",pct:24,color:"violet"},
+                      {name:"Akun Gratis",count:1165,revenue:"Rp 0",pct:0,color:"slate"},
+                    ].map(r=>(
+                      <div key={r.name}>
+                        <div className="flex justify-between text-sm mb-1.5">
+                          <span className="font-semibold text-slate-700">{r.name}</span>
+                          <span className="text-slate-400 text-xs">{r.count} pengguna · {r.revenue}</span>
+                        </div>
+                        <ProgressBar value={r.pct} color={r.color}/>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    );
+  };
+
+  // ── ROUTER ────────────────────────────────────────────────────────
+  return (
+    <>
+      <Toast toasts={toasts} removeToast={removeToast}/>
+      {view==="login"    && <AuthPage isLogin={true}/>}
+      {view==="register" && <AuthPage isLogin={false}/>}
+      {view==="dashboard"&& <UserDashboard/>}
+      {view==="payment"  && <PaymentPage/>}
+      {view==="admin"    && <AdminDashboard/>}
+      {(view==="landing"||!["login","register","dashboard","payment","admin"].includes(view)) && <LandingPage/>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
