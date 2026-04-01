@@ -7,136 +7,96 @@
   <meta name="description" content="ARUNA: Inovasi Aplikasi Edukasi Seksual Anak Usia Dini Berbasis Augmented Reality sebagai Solusi Preventif Kekerasan Seksual di Era Digital. P2MW UNNES 2026." />
   <meta name="theme-color" content="#0EA5E9" />
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui'] },
-        }
-      }
+      theme: { extend: { fontFamily: { sans: ["Plus Jakarta Sans","ui-sans-serif","system-ui"] } } }
     }
   </script>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- React & ReactDOM -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-  <!-- Babel (JSX transpiler in browser) -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    #root { min-height: 100vh; }
-
-    @keyframes bounce-in {
-      0%   { opacity: 0; transform: translateX(60px); }
-      60%  { transform: translateX(-6px); }
-      100% { opacity: 1; transform: translateX(0); }
-    }
-    .animate-bounce-in { animation: bounce-in 0.35s ease-out; }
-
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 0.4; }
-      50%       { opacity: 0.7; }
-    }
-    .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:"Plus Jakarta Sans",sans-serif;}
+    #root{min-height:100vh;}
+    @keyframes bounce-in{0%{opacity:0;transform:translateX(60px)}60%{transform:translateX(-6px)}100%{opacity:1;transform:translateX(0)}}
+    .animate-bounce-in{animation:bounce-in .35s ease-out;}
+    @keyframes pulse-slow{0%,100%{opacity:.4}50%{opacity:.7}}
+    .animate-pulse-slow{animation:pulse-slow 3s ease-in-out infinite;}
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:#f1f5f9;}
+    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
   </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script type="text/babel" data-presets="react">
-// ─── LUCIDE ICON HELPER ──────────────────────────────────────────
-// Wraps lucide UMD icons as React components
-function Icon({ name, className = "w-5 h-5" }) {
-  const el = React.useRef(null);
-  React.useEffect(() => {
-    if (el.current && window.lucide) {
-      el.current.innerHTML = "";
-      const svg = window.lucide.createElement(name);
-      if (svg) {
-        const cls = className.split(" ");
-        cls.forEach(c => c && svg.classList.add(c));
-        el.current.appendChild(svg);
-      }
-    }
-  }, [name, className]);
-  return React.createElement("span", { ref: el, className: "inline-flex items-center justify-center" });
-}
 
-// Shorthand icon components matching lucide names
-const Ic = (name) => ({ className }) => React.createElement(Icon, { name, className });
-const MenuIcon       = Ic("menu");
-const XIcon          = Ic("x");
-const GlassesIcon    = Ic("glasses");
-const ShieldCheckIcon= Ic("shield-check");
-const BookOpenIcon   = Ic("book-open");
-const StarIcon       = Ic("star");
-const UsersIcon      = Ic("users");
-const LayoutDashIcon = Ic("layout-dashboard");
-const LogOutIcon     = Ic("log-out");
-const ActivityIcon   = Ic("activity");
-const BarChart3Icon  = Ic("bar-chart-3");
-const ChevRightIcon  = Ic("chevron-right");
-const SmileIcon      = Ic("smile");
-const HeartIcon      = Ic("heart");
-const PlayCircleIcon = Ic("play-circle");
-const LockIcon       = Ic("lock");
-const UserPlusIcon   = Ic("user-plus");
-const CreditCardIcon = Ic("credit-card");
-const CheckCircIcon  = Ic("check-circle");
-const WalletIcon     = Ic("wallet");
-const ArrowRightIcon = Ic("arrow-right");
-const ReceiptIcon    = Ic("receipt");
-const ShieldIcon     = Ic("shield");
-const FileTextIcon   = Ic("file-text");
-const VideoIcon      = Ic("video");
-const AwardIcon      = Ic("award");
-const CheckIcon      = Ic("check");
-const MaximizeIcon   = Ic("maximize");
-const BellIcon       = Ic("bell");
-const SearchIcon     = Ic("search");
-const DownloadIcon   = Ic("download");
-const TrendUpIcon    = Ic("trending-up");
-const ClockIcon      = Ic("clock");
-const ChevDownIcon   = Ic("chevron-down");
-const ChevUpIcon     = Ic("chevron-up");
-const FilterIcon     = Ic("filter");
-const RefreshIcon    = Ic("refresh-cw");
-const MessageIcon    = Ic("message-square");
-const HelpCircIcon   = Ic("help-circle");
-const ZapIcon        = Ic("zap");
-const GlobeIcon      = Ic("globe");
-const PhoneIcon      = Ic("phone");
-const MailIcon       = Ic("mail");
-const AlertCircIcon  = Ic("alert-circle");
-const InfoIcon       = Ic("info");
-const XCircIcon      = Ic("x-circle");
-const CheckCirc2Icon = Ic("check-circle-2");
-const SparklesIcon   = Ic("sparkles");
-const BookMarkIcon   = Ic("bookmark");
-const TargetIcon     = Ic("target");
-const BarChart2Icon  = Ic("bar-chart-2");
-const UserCheckIcon  = Ic("user-check");
-const SettingsIcon   = Ic("settings");
-const ThumbsUpIcon   = Ic("thumbs-up");
-const BookMarkedIcon = Ic("book-marked");
+// ═══════════════════════════════════════════════════════════════
+// SVG ICON COMPONENTS — No external library, zero errors
+// ═══════════════════════════════════════════════════════════════
+const s = (p) => ({ strokeWidth:2, stroke:"currentColor", fill:"none", strokeLinecap:"round", strokeLinejoin:"round", ...p });
+
+const MenuIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>;
+const XIcon          = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>;
+const GlassesIcon    = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M2 15s0-5 4-5h12c4 0 4 5 4 5"/><line x1="10" y1="15" x2="14" y2="15"/></svg>;
+const ShieldCheckIcon= ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9,12 11,14 15,10"/></svg>;
+const BookOpenIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+const StarIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>;
+const UsersIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>;
+const LayoutDashIcon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>;
+const LogOutIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>;
+const ActivityIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>;
+const BarChart3Icon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>;
+const ChevRightIcon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="9,18 15,12 9,6"/></svg>;
+const SmileIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>;
+const HeartIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>;
+const PlayCircleIcon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>;
+const LockIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+const UserPlusIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>;
+const CreditCardIcon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>;
+const CheckCircIcon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>;
+const WalletIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/></svg>;
+const ArrowRightIcon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>;
+const ReceiptIcon    = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="6,2 3,2 3,22 21,22 21,2 18,2 18,18 15,16 12,18 9,16 6,18"/></svg>;
+const ShieldIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
+const FileTextIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>;
+const VideoIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polygon points="23,7 16,12 23,17"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>;
+const AwardIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="8" r="7"/><polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"/></svg>;
+const CheckIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="20,6 9,17 4,12"/></svg>;
+const MaximizeIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>;
+const BellIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>;
+const SearchIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>;
+const DownloadIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>;
+const TrendUpIcon    = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg>;
+const ClockIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>;
+const ChevDownIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="6,9 12,15 18,9"/></svg>;
+const ChevUpIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="18,15 12,9 6,15"/></svg>;
+const FilterIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"/></svg>;
+const RefreshIcon    = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polyline points="23,4 23,10 17,10"/><polyline points="1,20 1,14 7,14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>;
+const MessageIcon    = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>;
+const HelpCircIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>;
+const ZapIcon        = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>;
+const GlobeIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
+const PhoneIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 5.55 5.55l.49-.49a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
+const MailIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>;
+const AlertCircIcon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
+const InfoIcon       = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>;
+const XCircIcon      = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>;
+const CheckCirc2Icon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>;
+const SparklesIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M12 3L9.5 9.5 3 12l6.5 2.5L12 21l2.5-6.5L21 12l-6.5-2.5z"/></svg>;
+const BookMarkIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>;
+const TargetIcon     = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>;
+const BarChart2Icon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>;
+const UserCheckIcon  = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17,11 19,13 23,9"/></svg>;
+const SettingsIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>;
+const ThumbsUpIcon   = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>;
+const BookMarkedIcon = ({className=""}) => <svg className={className} viewBox="0 0 24 24" {...s()}><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><line x1="9" y1="9" x2="15" y2="9"/></svg>;
 
 // ─── TOAST ────────────────────────────────────────────────────────
 function Toast({ toasts, removeToast }) {
